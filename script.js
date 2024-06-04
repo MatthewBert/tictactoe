@@ -40,3 +40,48 @@ const GameController = (function () {
 // adding players to gameController
 GameController.addPlayer(player1);
 GameController.addPlayer(player2);
+
+//If the board matches a winPattern they win
+const CheckWin = (board) => {
+    const winPatterns = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]             // diagonals
+    ];
+
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        //if both conditions are true, three positions have the same player marker indicating a win
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return true;
+        }
+    }
+    return false;
+};
+
+//If there is at least 1 empty cell its a not a tie
+const CheckTie = (board) => {
+    for(let i = 0; i < board.length; i++){
+        if(board[i] === ""){
+            return false; 
+        }
+    }
+    return true; 
+};
+
+// Usage:
+const board = Gameboard.getBoard();
+board[0] = "X";
+board[1] = "O";
+board[2] = "X";
+board[3] = "O";
+board[4] = "X";
+board[5] = "X";
+board[6] = "O";
+board[7] = "X";
+board[8] = "O";
+
+console.log(CheckWin(board)); // Should log true if there is a win
+console.log(CheckTie(board)); // Should log true if it's a tie
+
+
