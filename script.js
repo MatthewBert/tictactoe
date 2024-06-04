@@ -5,7 +5,7 @@ const Gameboard = (function () {
 
     const getBoard = () => board;
     const setCell = (index, token) => {
-        if(board[index] === ""){
+        if (board[index] === "") {
             board[index] = token;
             return true;
         }
@@ -39,7 +39,33 @@ const GameController = (function () {
         };
     };
 
-    return { addPlayer, getCurrentPlayer, switchPlayer };
+    const playRound = (index) => {
+        const player = getCurrentPlayer();
+        console.log(`${player.name} is picking cell ${index}`)
+        if (Gameboard.setCell(index, player.token)) {
+            if (CheckWin(Gameboard.getBoard())) {
+                console.log(`${player.name} wins!`);
+                Gameboard.resetBoard();
+                return;
+            }
+            if (CheckTie(Gameboard.getBoard())) {
+                console.log("It's a tie!");
+                Gameboard.resetBoard();
+                return;
+            }
+            //If the game is not Win or Tie, switch to the next player
+            switchPlayer();
+        } else {
+            console.log(`Cell ${index} is already taken, ${player.name} must choose another cell!`);
+        }
+    };
+
+    const startGame = () => {
+        Gameboard.resetBoard();
+        currentPlayer = 0;
+    };
+
+    return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame };
 })();
 
 //If the board matches a winPattern they win
@@ -62,11 +88,30 @@ const CheckWin = (board) => {
 
 //If there is at least 1 empty cell its a not a tie
 const CheckTie = (board) => {
-    for(let i = 0; i < board.length; i++){
-        if(board[i] === ""){
-            return false; 
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === "") {
+            return false;
         }
     }
-    return true; 
+    return true;
 };
 
+// Set up players
+const player1 = CreatePlayer("Player 1", "X");
+const player2 = CreatePlayer("Player 2", "O");
+
+GameController.addPlayer(player1);
+GameController.addPlayer(player2);
+
+// Start the game
+GameController.startGame();
+
+// Example gameplay
+GameController.playRound(0); 
+GameController.playRound(1); 
+GameController.playRound(1); 
+GameController.playRound(4); 
+GameController.playRound(2); 
+GameController.playRound(8); 
+
+// Continue playing rounds until the game ends or reset
