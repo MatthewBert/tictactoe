@@ -4,19 +4,24 @@ const Gameboard = (function () {
     let board = ["", "", "", "", "", "", "", "", ""];
 
     const getBoard = () => board;
+    const setCell = (index, token) => {
+        if(board[index] === ""){
+            board[index] = token;
+            return true;
+        }
+        return false;
+    };
+    const resetBoard = () => {
+        board = ["", "", "", "", "", "", "", "", ""];
+    }
 
-    return { getBoard };
+    return { getBoard, setCell, resetBoard };
 })();
 
 // createPlayer will create a new player for the game
 const CreatePlayer = (name, token) => {
     return { name, token };
 };
-
-// creating some temp players for testing
-const player1 = CreatePlayer("Alice", "X");
-const player2 = CreatePlayer("Bob", "O");
-
 
 //GameController will be responsible for controlling the flow and state of the game
 const GameController = (function () {
@@ -36,10 +41,6 @@ const GameController = (function () {
 
     return { addPlayer, getCurrentPlayer, switchPlayer };
 })();
-
-// adding players to gameController
-GameController.addPlayer(player1);
-GameController.addPlayer(player2);
 
 //If the board matches a winPattern they win
 const CheckWin = (board) => {
@@ -68,20 +69,4 @@ const CheckTie = (board) => {
     }
     return true; 
 };
-
-// Usage:
-const board = Gameboard.getBoard();
-board[0] = "X";
-board[1] = "O";
-board[2] = "X";
-board[3] = "O";
-board[4] = "X";
-board[5] = "X";
-board[6] = "O";
-board[7] = "X";
-board[8] = "O";
-
-console.log(CheckWin(board)); // Should log true if there is a win
-console.log(CheckTie(board)); // Should log true if it's a tie
-
 
