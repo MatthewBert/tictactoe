@@ -1,6 +1,23 @@
 //DOM elements
 const gameboardContainer = document.getElementById('gameboard');
 const winnerSound = document.getElementById('winnerSound');
+const resetButton = document.getElementById('reset-button');
+const statusBoard = document.getElementById('messages');
+const player1score = document.getElementById('player1score');
+const player2score = document.getElementById('player2score');
+const playerInfo = document.getElementById('player-info');
+
+
+resetButton.addEventListener('click', () => {
+    console.log("Reset button clicked");
+    statusBoard.innerHTML = '<p>Game has been reset</p>';
+    Gameboard.resetBoard();
+    currentPlayer = 0;
+    isGameOver = false;
+    renderBoard(Gameboard.getBoard());
+    GameController.resetScore();
+});
+
 
 function renderBoard(board) {
     for (let i = 0; i < board.length; i++) {
@@ -13,7 +30,6 @@ function initializeEventListeners() {
     for (let i = 0; i < 9; i++) { // the board will always have 9 cells
         const cell = document.getElementById(`cell-${i}`);
         cell.addEventListener('click', () => {
-            console.log("Cell " + i + " selected");
             GameController.playRound(i);
         });
     }
@@ -41,7 +57,11 @@ const Gameboard = (function () {
 
 // createPlayer will create a new player for the game
 const CreatePlayer = (name, token) => {
-    return { name, token };
+    let score = 0;
+    const givePoint = () => score++;
+    const checkPoints = () => score;
+    const resetPoints = () => score = 0;
+    return { name, token, givePoint, checkPoints, resetPoints };
 };
 
 //GameController will be responsible for controlling the flow and state of the game
@@ -62,15 +82,22 @@ const GameController = (function () {
     };
 
     const playRound = (index) => {
-        if(isGameOver) return; //prevent actions if the game is over
+        if (isGameOver) return; //prevent actions if the game is over
 
         const player = getCurrentPlayer();
-        console.log(`${player.name} is picking cell ${index}`);
+        console.log(`${player.name} has picked cell ${index}`);
         if (Gameboard.setCell(index, player.token)) {
             renderBoard(Gameboard.getBoard());
             if (CheckWin(Gameboard.getBoard())) {
                 winnerSound.play();
                 endGame(`${player.name} wins!`);
+                if (player.name === "Player 1") {
+                    player.givePoint();
+                    player1score.innerHTML = `Player 1 Score: ${player.checkPoints()}`
+                } else if (player.name === "Player 2") {
+                    player.givePoint();
+                    player2score.innerHTML = `Player 2 Score: ${player.checkPoints()}`
+                }
                 return;
             }
             if (CheckTie(Gameboard.getBoard())) {
@@ -80,6 +107,13 @@ const GameController = (function () {
             switchPlayer();
         } else {
             console.log(`Cell ${index} is already taken, ${player.name} must choose another cell!`);
+            statusBoard.innerHTML += `<p>That cell is not valid, <b>${player.name}</b> must choose an available cell!</p>`;
+        }
+        //used for player info to display current player turn
+        if (player.name === "Player 2") {
+            playerInfo.innerHTML = `<b>Player 1 (X)</b> must select a cell`
+        } else if (player.name === "Player 1") {
+            playerInfo.innerHTML = `<b>Player 2 (O)</b> must select a cell`
         }
     };
 
@@ -89,19 +123,29 @@ const GameController = (function () {
         isGameOver = false;
         renderBoard(Gameboard.getBoard());
         initializeEventListeners();
+        playerInfo.innerHTML = `<b>Player 1 (X)</b> must select a cell`
     };
 
     const endGame = (message) => {
         console.log(message);
+        statusBoard.innerHTML += `<p>${message}</p>`;
         isGameOver = true;
         setTimeout(() => {
             Gameboard.resetBoard();
             renderBoard(Gameboard.getBoard());
             isGameOver = false; // Allow clicks again
-        }, 3000); // Delay for 3 seconds (3000 milliseconds)
+        }, 1500);
     };
 
-    return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame, endGame};
+    const resetScore = () => {
+        players[0].resetPoints()
+        players[1].resetPoints()
+        console.log(players[0].checkPoints(), players[0].checkPoints())
+        player1score.innerHTML = `Player 1 Score: 0`
+        player2score.innerHTML = `Player 2 Score: 0`
+    }
+
+    return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame, endGame, resetScore };
 })();
 
 //If the board matches a winPattern they win
