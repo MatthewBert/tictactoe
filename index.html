@@ -9,8 +9,16 @@
 </head>
 
 <body>
+    <header class="header">TIC TAC TOE</header>
     <div id="container">
-        <div class="player-info">Player Info</div>
+        <div class="player-container">
+            <h3>Player Info</h3>
+            <div class="scorecard">
+                <div id="player1score">Player 1 Score: 0</div>
+                <div id="player2score">Player 2 Score: 0</div>
+            </div>
+            <div id="player-info"></div>
+        </div>
         <div id="gameboard">
             <div class="cell" id="cell-0"></div>
             <div class="cell" id="cell-1"></div>
@@ -22,10 +30,13 @@
             <div class="cell" id="cell-7"></div>
             <div class="cell" id="cell-8"></div>
         </div>
-        <div class="status-message">Status Messages</div>
+        <div class="status-message">
+            <h3>Status Messages</h3>
+            <div id="messages"></div>
+        </div>
     </div>
     <div class="button-container">
-        <button type="reset" class="reset-button">Reset</button>
+        <button type="reset" id="reset-button">Reset</button>
     </div>
     <audio id="winnerSound" src="assets/winner.mp3" preload="auto"></audio>
     <script src="script.js"></script>
