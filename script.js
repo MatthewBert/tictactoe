@@ -41,7 +41,7 @@ const GameController = (function () {
 
     const playRound = (index) => {
         const player = getCurrentPlayer();
-        console.log(`${player.name} is picking cell ${index}`)
+        console.log(`${player.name} is picking cell ${index}`);
         if (Gameboard.setCell(index, player.token)) {
             if (CheckWin(Gameboard.getBoard())) {
                 console.log(`${player.name} wins!`);
@@ -95,23 +95,3 @@ const CheckTie = (board) => {
     }
     return true;
 };
-
-// Set up players
-const player1 = CreatePlayer("Player 1", "X");
-const player2 = CreatePlayer("Player 2", "O");
-
-GameController.addPlayer(player1);
-GameController.addPlayer(player2);
-
-// Start the game
-GameController.startGame();
-
-// Example gameplay
-GameController.playRound(0); 
-GameController.playRound(1); 
-GameController.playRound(1); 
-GameController.playRound(4); 
-GameController.playRound(2); 
-GameController.playRound(8); 
-
-// Continue playing rounds until the game ends or reset
