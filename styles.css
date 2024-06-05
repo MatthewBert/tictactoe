@@ -1,0 +1,41 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#container{
+    display: grid;
+    grid-template-columns: 1fr 500px 1fr;
+}
+
+#gameboard{
+    display: grid;
+    max-width: 500px;
+    background-color: black;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    border: 1px solid green;
+}
+
+.cell{
+    width: 100%;
+    height: 10.41rem;
+    color: green;
+    font-size: 10rem;
+    text-align: center;
+    background-color: black;
+    border: 1px solid green;
+    grid-template-columns: repeat(3, 1fr);
+    cursor: pointer;
+}
+
+.cell:hover{
+    background-color: #333333;
+}
+
+.reset-button{
+    cursor: pointer;
+}
