@@ -4,9 +4,24 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+    color: green;   
+}
+
+header{
+    color:green;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bolder;
+}
+
+h3{
+    text-decoration: underline;
+    padding-bottom: 1rem;
 }
 
 #container{
+    padding-top: .50rem;
     display: grid;
     grid-template-columns: 1fr 500px 1fr;
 }
@@ -32,10 +47,39 @@
     cursor: pointer;
 }
 
+.player-container, .status-message{
+    padding: 0 .25rem;
+}
+
+#player-info{
+    padding-top: 1rem;
+}
+
+#messages{
+    overflow-y: auto;
+    max-height: 450px;
+}
+#messages p{
+    padding: .25rem 0rem;
+    border-bottom:1px solid green ;
+}
+
 .cell:hover{
     background-color: #333333;
 }
 
-.reset-button{
+.button-container{
+    display: flex;
+    justify-content: center;
+    padding: 1rem 2rem;
+}
+
+#reset-button{
+    text-align: center;
     cursor: pointer;
+    width: 9rem;
+    height: 3rem;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 1px solid green
 }
