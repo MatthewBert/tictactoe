@@ -1,3 +1,24 @@
+//DOM elements
+const gameboardContainer = document.getElementById('gameboard');
+const winnerSound = document.getElementById('winnerSound');
+
+function renderBoard(board) {
+    for (let i = 0; i < board.length; i++) {
+        const cell = document.getElementById(`cell-${i}`);
+        cell.textContent = board[i];
+    }
+}
+
+function initializeEventListeners() {
+    for (let i = 0; i < 9; i++) { // the board will always have 9 cells
+        const cell = document.getElementById(`cell-${i}`);
+        cell.addEventListener('click', () => {
+            console.log("Cell " + i + " selected");
+            GameController.playRound(i);
+        });
+    }
+}
+
 //Gameboard represents the state of the board
 const Gameboard = (function () {
     //empty array is used to hold the 3x3 grid
@@ -27,6 +48,7 @@ const CreatePlayer = (name, token) => {
 const GameController = (function () {
     const players = [];
     let currentPlayer = 0;
+    let isGameOver = false; //flag used to check if the game has ended
 
     const addPlayer = (player) => players.push(player);
     const getCurrentPlayer = () => players[currentPlayer];
@@ -40,20 +62,21 @@ const GameController = (function () {
     };
 
     const playRound = (index) => {
+        if(isGameOver) return; //prevent actions if the game is over
+
         const player = getCurrentPlayer();
         console.log(`${player.name} is picking cell ${index}`);
         if (Gameboard.setCell(index, player.token)) {
+            renderBoard(Gameboard.getBoard());
             if (CheckWin(Gameboard.getBoard())) {
-                console.log(`${player.name} wins!`);
-                Gameboard.resetBoard();
+                winnerSound.play();
+                endGame(`${player.name} wins!`);
                 return;
             }
             if (CheckTie(Gameboard.getBoard())) {
-                console.log("It's a tie!");
-                Gameboard.resetBoard();
+                endGame("It's a tie!");
                 return;
             }
-            //If the game is not Win or Tie, switch to the next player
             switchPlayer();
         } else {
             console.log(`Cell ${index} is already taken, ${player.name} must choose another cell!`);
@@ -63,9 +86,22 @@ const GameController = (function () {
     const startGame = () => {
         Gameboard.resetBoard();
         currentPlayer = 0;
+        isGameOver = false;
+        renderBoard(Gameboard.getBoard());
+        initializeEventListeners();
     };
 
-    return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame };
+    const endGame = (message) => {
+        console.log(message);
+        isGameOver = true;
+        setTimeout(() => {
+            Gameboard.resetBoard();
+            renderBoard(Gameboard.getBoard());
+            isGameOver = false; // Allow clicks again
+        }, 3000); // Delay for 3 seconds (3000 milliseconds)
+    };
+
+    return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame, endGame};
 })();
 
 //If the board matches a winPattern they win
@@ -95,3 +131,15 @@ const CheckTie = (board) => {
     }
     return true;
 };
+
+//used for testing:
+
+// initialize players and start the game
+const player1 = CreatePlayer("Player 1", "X");
+const player2 = CreatePlayer("Player 2", "O");
+
+GameController.addPlayer(player1);
+GameController.addPlayer(player2);
+
+GameController.startGame();
+
