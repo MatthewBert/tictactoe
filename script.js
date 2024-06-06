@@ -1,5 +1,4 @@
 //DOM elements
-const gameboardContainer = document.getElementById('gameboard');
 const winnerSound = document.getElementById('winnerSound');
 const resetButton = document.getElementById('reset-button');
 const statusBoard = document.getElementById('messages');
@@ -160,10 +159,10 @@ const CheckWin = (board) => {
         const [a, b, c] = pattern;
         //if both conditions are true, three positions have the same player marker indicating a win
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            return true;
+            return pattern;
         }
     }
-    return false;
+    return null;
 };
 
 //If there is at least 1 empty cell its a not a tie
