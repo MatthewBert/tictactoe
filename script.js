@@ -92,10 +92,10 @@ const GameController = (function () {
                 endGame(`${player.name} wins!`);
                 if (player.name === "Player 1") {
                     player.givePoint();
-                    player1score.innerHTML = `Player 1 Score: ${player.checkPoints()}`
+                    player1score.innerHTML = `P1 Score: ${player.checkPoints()}`
                 } else if (player.name === "Player 2") {
                     player.givePoint();
-                    player2score.innerHTML = `Player 2 Score: ${player.checkPoints()}`
+                    player2score.innerHTML = `P2 Score: ${player.checkPoints()}`
                 }
                 return;
             }
@@ -140,8 +140,8 @@ const GameController = (function () {
         players[0].resetPoints()
         players[1].resetPoints()
         console.log(players[0].checkPoints(), players[0].checkPoints())
-        player1score.innerHTML = `Player 1 Score: 0`
-        player2score.innerHTML = `Player 2 Score: 0`
+        player1score.innerHTML = `P1 Score: 0`
+        player2score.innerHTML = `P2 Score: 0`
     }
 
     return { addPlayer, getCurrentPlayer, switchPlayer, playRound, startGame, endGame, resetScore };
